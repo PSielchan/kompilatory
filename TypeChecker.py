@@ -57,7 +57,7 @@ class TypeChecker(NodeVisitor):
         elif op in ['+=', '-=', '*=', '/=']:
             type2 = self.visit(node.left)
             if type1 != type2:
-                print("Incompatible types in assignment")
+                print(f"Type error at line {node.lineno}: Incompatible types in assignment")
                 return
         return type1
 
@@ -66,7 +66,7 @@ class TypeChecker(NodeVisitor):
         type2 = self.visit(node.right)
         op = node.op
         if type1 != type2:
-            print(f"Incompatible types in comparison: {type1} and {type2}")
+            print(f"Type error at line {node.lineno}:Incompatible types in comparison: {type1} and {type2}")
         return 'bool'
 
     def visit_RelExpr(self, node):
@@ -81,23 +81,23 @@ class TypeChecker(NodeVisitor):
         if is_matrix1 and is_matrix2:
             # Both are matrices
             if len(type1) != len(type2) or any(len(row1) != len(row2) for row1, row2 in zip(type1, type2)):
-                print("Matrix dimensions do not match for operation")
+                print(f"Type error at line {node.lineno}: Matrix dimensions do not match for operation")
             elif op in ['.+', '.-', '.*', './']:
                 if not all(isinstance(val, (int, float)) for row in type1 for val in row):
-                    print("Non-numeric values found in matrix 1")
+                    print(f"Type error at line {node.lineno}: Non-numeric values found in matrix 1")
                 if not all(isinstance(val, (int, float)) for row in type2 for val in row):
-                    print("Non-numeric values found in matrix 2")
+                    print(f"Type error at line {node.lineno}: Non-numeric values found in matrix 2")
         else:
             if op in ['+', '-']:
                 if not isinstance(type1 if not is_matrix1 else type2, (int, float)):
-                    print("Matrix +- scalar operation")
+                    print(f"Type error at line {node.lineno}: Matrix +- scalar operation")
 
     def visit_BinExpr(self, node):
         type1 = self.visit(node.left)
         type2 = self.visit(node.right)
         op = node.op
         if type1 != type2:
-            print(f"Incompatible types in relational expression: {type1} and {type2}")
+            print(f"Type error at line {node.lineno}: Incompatible types in relational expression: {type1} and {type2}")
         return type1
 
     def visit_WhileLoop(self, node):
@@ -138,7 +138,7 @@ class TypeChecker(NodeVisitor):
         #print(start_type)
         #print(end_type)
         if start_type != end_type:
-            print("Start and end types in range are incompatible")
+            print(f"Type error at line {node.lineno}: Start and end types in range are incompatible")
         return start_type
 
     def visit_Print(self, node):
@@ -151,24 +151,24 @@ class TypeChecker(NodeVisitor):
 
     def visit_Break(self, node):
         if self.symbol_table.nesting == 0:
-            print("Break outside of loop")
+            print(f"Type error at line {node.lineno}: Break outside of loop")
 
     def visit_Continue(self, node):
         if self.symbol_table.nesting == 0:
-            print("Continue outside of loop")
+            print(f"Type error at line {node.lineno}: Continue outside of loop")
 
     def visit_Reference(self, node):
         type1=self.visit(node.x)
         type2=self.visit(node.x)
         if type1 != 'int' or type2 != 'int':
-            print("bad reference")
+            print(f"Type error at line {node.lineno}: bad reference")
             return 'bref'
         else:
             #print("siema")
             #print(node.expr)
             type3=self.visit(node.expr)
             if int(node.x.value)>len(type3) or int(node.y.value)>len(type3[0]):
-                print("matrix out of index")
+                print(f"Type error at line {node.lineno}: matrix out of index")
                 return 'bref'
         return 'gref'
 
@@ -177,14 +177,14 @@ class TypeChecker(NodeVisitor):
         if type!='int' and type!='string' and type!='float':
             return [[type1[j][i] for i in range(len(type1))] for j in range(len(type1[0]))]
         else:
-            print("Cannot transpose something that is not a matrix or vector")
+            print(f"Type error at line {node.lineno}: Cannot transpose something that is not a matrix or vector")
 
     def visit_UnMinus(self, node):
         type1 = self.visit(node.num)
         if type1 != 'string':
             return type1
         else:
-            print("Bad type for unary minus!")
+            print(f"Type error at line {node.lineno}: Bad type for unary minus!")
 
     def visit_List(self, node):
         elements = [self.visit(item) for item in node.list]
@@ -192,29 +192,29 @@ class TypeChecker(NodeVisitor):
         if all(isinstance(el, list) for el in elements):
             row_lengths = {len(row) for row in elements}
             if len(row_lengths) > 1:
-                print("Matrix rows have inconsistent lengths")
+                print(f"Type error at line {node.lineno}: Matrix rows have inconsistent lengths")
                 return None
             element_types = {type(item) for row in elements for item in row}
             if len(element_types) > 1:
-                print("Matrix elements have inconsistent types")
+                print(f"Type error at line {node.lineno}: Matrix elements have inconsistent types")
                 return None
             return elements  # Return the validated matrix structure
         elif all(not isinstance(el, list) for el in elements):
             # Flat list: Ensure all elements have the same type
             element_types = {type(item) for item in elements}
             if len(element_types) > 1:
-                print("List elements have inconsistent types")
+                print(f"Type error at line {node.lineno}: List elements have inconsistent types")
                 return None
             return elements  # Return the validated flat list
         else:
-            print("Mixed matrix and scalar elements")
+            print(f"Type error at line {node.lineno}: Mixed matrix and scalar elements")
             return None
 
 
     def visit_MatrixFunc(self, node):
         type = self.visit(node.matrix)
         if type != 'int':
-            print("Invalid parameter for matrix function")
+            print(f"Type error at line {node.lineno}: Invalid parameter for matrix function")
             return None
         dl=int(node.matrix.value)
         return [['int' for _ in range(dl)] for _ in range(dl)]
@@ -237,5 +237,5 @@ class TypeChecker(NodeVisitor):
         return self.visit(node.name)
 
     def visit_Error(self, node):
-        print("Error in AST structure.")
+        print(f"Error at line {node.lineno}: Error in AST structure.")
         return None

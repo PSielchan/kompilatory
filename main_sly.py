@@ -21,5 +21,5 @@ if __name__ == '__main__':
     ast = parser.parse(lexer.tokenize(text))
     ast.printTree()
 
-    typeChecker = TypeChecker()   
+    typeChecker = TypeChecker()
     typeChecker.visit(ast)   # or alternatively ast.accept(typeChecker)
