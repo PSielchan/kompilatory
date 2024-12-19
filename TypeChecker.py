@@ -167,8 +167,11 @@ class TypeChecker(NodeVisitor):
             #print("siema")
             #print(node.expr)
             type3=self.visit(node.expr)
-            if int(node.x.value)>len(type3) or int(node.y.value)>len(type3[0]):
-                print(f"Type error at line {node.lineno}: matrix out of index")
+            if not isinstance(type3,list):
+                print(f"Type error at line {node.lineno}: matrix do not exist")
+                return 'bref'
+            elif int(node.x.value)>len(type3) or int(node.y.value)>len(type3[0]):
+                print(f"Type error at line {node.lineno}: matrix index out of range")
                 return 'bref'
         return 'gref'
 
@@ -212,11 +215,14 @@ class TypeChecker(NodeVisitor):
 
 
     def visit_MatrixFunc(self, node):
-        type = self.visit(node.matrix)
-        if type != 'int':
-            print(f"Type error at line {node.lineno}: Invalid parameter for matrix function")
+        if len(node.matrix)!=1:
+            print(f"Type error at line {node.lineno}: Bad number of arguments for matirx function")
             return None
-        dl=int(node.matrix.value)
+        type = self.visit(node.matrix[0])
+        if type != 'int':
+            print(f"Type error at line {node.lineno}: Bad type of parameter for matrix function")
+            return None
+        dl=int(node.matrix[0].value)
         return [['int' for _ in range(dl)] for _ in range(dl)]
         
 
