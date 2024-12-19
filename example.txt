@@ -1,23 +1,9 @@
+A = eye(3);
+B = ones(3);
+C = A .+ B;
+print C;
 
-x = 0;
-y = zeros(5);
-z = x + y;
-
-x = eye(5);
-y = eye(8);
-z = x + y;
-
-x = [ 1,2,3,4,5 ];
-y = [ [1,2,3,4],
-      [1,2,3,4,5] ];
-z = x + y;
-
-x = zeros(5);
-y = zeros(7,6);
-z = x + y;
-
-
-m = ones(3);
-x = ones(3,5);
-z = x[7,10];
-# v = x[2,3,4];
+D = zeros(3, 4);
+D[0, 0] = 42;
+print D;
+print D[2, 2];
