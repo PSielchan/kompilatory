@@ -5,7 +5,6 @@ from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
 from Interpreter import Interpreter
 
-
 if __name__ == '__main__':
 
     try:
@@ -22,9 +21,9 @@ if __name__ == '__main__':
     ast = parser.parse(lexer.tokenize(text))
     # ast.printTree()
 
-    # typeChecker = TypeChecker()
-    # typeChecker.visit(ast)   # or alternatively ast.accept(typeChecker)
-    #
-    # ast.accept(Interpreter())
-    interpreter = Interpreter()
-    interpreter.visit(ast)
+    typeChecker = TypeChecker()
+    typeChecker.visit(ast)
+
+    if not typeChecker.error_flag:
+        interpreter = Interpreter()
+        interpreter.visit(ast)

@@ -12,23 +12,23 @@ Rule 8     instruction -> loop
 Rule 9     instruction -> conditional
 Rule 10    instruction -> assignment ;
 Rule 11    instruction -> { instructions }
-Rule 12    expression -> expression NEQ expression  [precedence=nonassoc, level=3]
-Rule 13    expression -> expression EQ expression  [precedence=nonassoc, level=3]
-Rule 14    expression -> expression GRTEQ expression  [precedence=nonassoc, level=3]
-Rule 15    expression -> expression LESEQ expression  [precedence=nonassoc, level=3]
-Rule 16    expression -> expression > expression  [precedence=nonassoc, level=3]
-Rule 17    expression -> expression < expression  [precedence=nonassoc, level=3]
+Rule 12    expression -> expression NEQ expression  [precedence=nonassoc, level=4]
+Rule 13    expression -> expression EQ expression  [precedence=nonassoc, level=4]
+Rule 14    expression -> expression GRTEQ expression  [precedence=nonassoc, level=4]
+Rule 15    expression -> expression LESEQ expression  [precedence=nonassoc, level=4]
+Rule 16    expression -> expression > expression  [precedence=nonassoc, level=4]
+Rule 17    expression -> expression < expression  [precedence=nonassoc, level=4]
 Rule 18    expression -> [ list ]
 Rule 19    expression -> ( expression )
 Rule 20    expression -> matrix_function
-Rule 21    expression -> expression / expression  [precedence=left, level=5]
-Rule 22    expression -> expression * expression  [precedence=left, level=5]
-Rule 23    expression -> expression - expression  [precedence=left, level=4]
-Rule 24    expression -> expression + expression  [precedence=left, level=4]
-Rule 25    expression -> expression DOTDIV expression  [precedence=left, level=5]
-Rule 26    expression -> expression DOTMUL expression  [precedence=left, level=5]
-Rule 27    expression -> expression DOTSUB expression  [precedence=left, level=4]
-Rule 28    expression -> expression DOTADD expression  [precedence=left, level=4]
+Rule 21    expression -> expression / expression  [precedence=left, level=6]
+Rule 22    expression -> expression * expression  [precedence=left, level=6]
+Rule 23    expression -> expression - expression  [precedence=left, level=5]
+Rule 24    expression -> expression + expression  [precedence=left, level=5]
+Rule 25    expression -> expression DOTDIV expression  [precedence=left, level=6]
+Rule 26    expression -> expression DOTMUL expression  [precedence=left, level=6]
+Rule 27    expression -> expression DOTSUB expression  [precedence=left, level=5]
+Rule 28    expression -> expression DOTADD expression  [precedence=left, level=5]
 Rule 29    expression -> variable
 Rule 30    expression -> STRING
 Rule 31    expression -> FLOATNUM
@@ -52,7 +52,7 @@ Rule 48    conditional -> IF ( expression ) instruction  [precedence=nonassoc, l
 Rule 49    conditional -> IF ( expression ) instruction ELSE instruction  [precedence=nonassoc, level=2]
 Rule 50    loop -> FOR variable = range instruction
 Rule 51    loop -> WHILE ( expression ) instruction
-Rule 52    range -> expression : expression  [precedence=nonassoc, level=6]
+Rule 52    range -> expression : expression  [precedence=nonassoc, level=3]
 
 Terminals, with rules where they appear:
 
@@ -4714,7 +4714,6 @@ state 114
     STRING          reduce using rule 52 (range -> expression : expression .)
     FLOATNUM        reduce using rule 52 (range -> expression : expression .)
     INTNUM          reduce using rule 52 (range -> expression : expression .)
-    -               reduce using rule 52 (range -> expression : expression .)
     EYE             reduce using rule 52 (range -> expression : expression .)
     ONES            reduce using rule 52 (range -> expression : expression .)
     ZEROS           reduce using rule 52 (range -> expression : expression .)
@@ -4726,6 +4725,7 @@ state 114
     <               shift and go to state 52
     /               shift and go to state 53
     *               shift and go to state 54
+    -               shift and go to state 55
     +               shift and go to state 56
     DOTDIV          shift and go to state 57
     DOTMUL          shift and go to state 58
