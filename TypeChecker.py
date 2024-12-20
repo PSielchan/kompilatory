@@ -96,6 +96,10 @@ class TypeChecker(NodeVisitor):
         type1 = self.visit(node.left)
         type2 = self.visit(node.right)
         op = node.op
+        if ((type1=="string" and type2=="int") or (type1=="int" and type2=="string")) and op=="*":
+            return "string"
+        elif (type1=="int" and type2=="float") or (type1=="float" and type2=="int"):
+            return "float"
         if type1 != type2:
             print(f"Type error at line {node.lineno}: Incompatible types in relational expression: {type1} and {type2}")
         return type1
