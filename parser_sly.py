@@ -11,10 +11,10 @@ class Mparser(Parser):
     precedence = (
         ("nonassoc", IFX),
         ("nonassoc", ELSE),
+        ("nonassoc", ':'),
         ("nonassoc", LESEQ, GRTEQ, EQ, NEQ, ">", "<"),
         ("left", '+', '-', DOTADD, DOTSUB),
         ("left", '*', DOTMUL, '/', DOTDIV),
-        ("nonassoc", ':'),
         ("right", UMINUS),
         ("right", '\''),
     )

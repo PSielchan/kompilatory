@@ -83,10 +83,25 @@ class TypeChecker(NodeVisitor):
             if len(type1) != len(type2) or any(len(row1) != len(row2) for row1, row2 in zip(type1, type2)):
                 print(f"Type error at line {node.lineno}: Matrix dimensions do not match for operation")
             elif op in ['.+', '.-', '.*', './']:
-                if not all(isinstance(val, (int, float)) for row in type1 for val in row):
-                    print(f"Type error at line {node.lineno}: Non-numeric values found in matrix 1")
-                if not all(isinstance(val, (int, float)) for row in type2 for val in row):
-                    print(f"Type error at line {node.lineno}: Non-numeric values found in matrix 2")
+                f=False
+                for row in type1:
+                    for val in row:
+                        if val!="int" and val!="float":
+                            print(f"Type error at line {node.lineno}: Non-numeric values found in matrix 1")
+                            f=True
+                        if f: break
+                    if f: break
+                f=False
+                for row in type2:
+                    for val in row:
+                        if val!="int" and val!="float":
+                            print(f"Type error at line {node.lineno}: Non-numeric values found in matrix 2")
+                            f=True
+                        if f: break
+                    if f: break
+
+                #if not all(isinstance(val, (int, float)) for row in type2 for val in row):
+                    
         else:
             if op in ['+', '-']:
                 if not isinstance(type1 if not is_matrix1 else type2, (int, float)):
@@ -219,7 +234,7 @@ class TypeChecker(NodeVisitor):
 
 
     def visit_MatrixFunc(self, node):
-        if len(node.matrix)!=1:
+        if len(node.matrix)>2:
             print(f"Type error at line {node.lineno}: Bad number of arguments for matirx function")
             return None
         type = self.visit(node.matrix[0])
