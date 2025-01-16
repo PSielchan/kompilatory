@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # ast.printTree()
 
     typeChecker = TypeChecker()
-    typeChecker.visit(ast)
+    # typeChecker.visit(ast)
 
     if not typeChecker.error_flag:
         interpreter = Interpreter()

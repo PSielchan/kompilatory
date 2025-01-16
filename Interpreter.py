@@ -78,7 +78,15 @@ class Interpreter(object):
             "-": lambda a, b: a - b,
             "*": lambda a, b: a * b,
             "/": lambda a, b: a / b}
-        return ops[node.op](r1,r2)
+        if isinstance(r1, list) or isinstance(r2, list):
+            r = []
+            mat,v = (r1,r2) if isinstance(r1, list) else (r2,r1)
+            for i in range(len(mat)):
+                r.append([])
+                for j in range(len(mat[i])):
+                    r[i].append(mat[i][j] + v)
+            return r
+        else: return ops[node.op](r1,r2)
 
     @when(AST.RelExpr)
     def visit(self, node):
