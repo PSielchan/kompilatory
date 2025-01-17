@@ -12,6 +12,23 @@ import string
 sys.setrecursionlimit(10000)
 
 
+def multiply_matrices(matrix_a, matrix_b):
+    if len(matrix_a[0]) != len(matrix_b):
+        raise ValueError("Liczba kolumn w macierzy A musi być równa liczbie wierszy w macierzy B.")
+
+    rows_a = len(matrix_a)
+    cols_a = len(matrix_a[0])
+    cols_b = len(matrix_b[0])
+
+    result = [[0 for _ in range(cols_b)] for _ in range(rows_a)]
+
+    for i in range(rows_a):
+        for j in range(cols_b):
+            for k in range(cols_a):
+                result[i][j] += matrix_a[i][k] * matrix_b[k][j]
+
+    return result
+
 def mem_name(name,length=3):
     characters = string.ascii_letters + string.digits
     return name + ''.join(random.choice(characters) for _ in range(length))
@@ -78,7 +95,9 @@ class Interpreter(object):
             "-": lambda a, b: a - b,
             "*": lambda a, b: a * b,
             "/": lambda a, b: a / b}
-        if isinstance(r1, list) or isinstance(r2, list):
+        if( isinstance(r1, list) and isinstance(r2, list)) and node.op == '*':
+            return multiply_matrices(r1,r2)
+        elif isinstance(r1, list) or isinstance(r2, list):
             r = []
             mat,v = (r1,r2) if isinstance(r1, list) else (r2,r1)
             for i in range(len(mat)):

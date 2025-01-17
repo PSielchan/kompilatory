@@ -121,6 +121,10 @@ class TypeChecker(NodeVisitor):
         type1 = self.visit(node.left)
         type2 = self.visit(node.right)
         op = node.op
+        if ((isinstance(type1, list) and (type2 == "int" or type2 == "float")) ):
+            return type1
+        if ((type1 == "int" or type1 == "float") and isinstance(type2, list)):
+            return type2
         if ((type1 == "string" and type2 == "int") or (type1 == "int" and type2 == "string")) and op == "*":
             return "string"
         elif (type1 == "int" and type2 == "float") or (type1 == "float" and type2 == "int"):
